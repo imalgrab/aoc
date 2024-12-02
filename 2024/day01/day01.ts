@@ -12,14 +12,16 @@ function parseInputA(): [number[], number[]] {
     rightArray.push(Number(second));
   }
 
-  return [leftArray.slice().sort(), rightArray.slice().sort()];
+  leftArray.sort();
+  rightArray.sort();
+
+  return [leftArray, rightArray];
 }
 
 function solveA(leftArray: number[], rightArray: number[]): number {
   let result = 0;
-  const length = leftArray.length;
 
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < leftArray.length; i++) {
     const distance = Math.abs(leftArray[i] - rightArray[i]);
     result += distance;
   }
@@ -29,7 +31,6 @@ function solveA(leftArray: number[], rightArray: number[]): number {
 
 const inputA = parseInputA();
 const solutionA = solveA(...inputA);
-
 console.log({ solutionA });
 
 // part 2
@@ -42,7 +43,6 @@ function parseInputB(): [number[], Map<number, number>] {
     const [first, second] = line.split("  ");
     const firstNumber = Number(first);
     const secondNumber = Number(second);
-
     left.push(firstNumber);
 
     if (!right.has(secondNumber)) {
@@ -69,5 +69,4 @@ function solveB(left: number[], right: Map<number, number>): number {
 
 const inputB = parseInputB();
 const solutionB = solveB(...inputB);
-
 console.log({ solutionB });
