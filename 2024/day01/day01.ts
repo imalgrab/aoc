@@ -1,4 +1,4 @@
-import { input } from "./day01-input";
+import { input } from "./input";
 
 // part 1
 
@@ -34,42 +34,34 @@ console.log({ solutionA });
 
 // part 2
 
-function parseInputB(): [Map<number, number>, Map<number, number>] {
-  const leftAppearances: Map<number, number> = new Map();
-  const rightAppearances: Map<number, number> = new Map();
+function parseInputB(): [number[], Map<number, number>] {
+  const left: number[] = [];
+  const right: Map<number, number> = new Map();
 
   for (const line of input.split("\n")) {
     const [first, second] = line.split("  ");
     const firstNumber = Number(first);
     const secondNumber = Number(second);
 
-    if (!leftAppearances.has(firstNumber)) {
-      leftAppearances.set(firstNumber, firstNumber);
-    } else {
-      const currentValue = leftAppearances.get(firstNumber) as number;
-      leftAppearances.set(firstNumber, currentValue + firstNumber);
-    }
+    left.push(firstNumber);
 
-    if (!rightAppearances.has(secondNumber)) {
-      rightAppearances.set(secondNumber, 1);
+    if (!right.has(secondNumber)) {
+      right.set(secondNumber, 1);
     } else {
-      const currentValue = rightAppearances.get(secondNumber) as number;
-      rightAppearances.set(secondNumber, currentValue + 1);
+      const currentValue = right.get(secondNumber) as number;
+      right.set(secondNumber, currentValue + 1);
     }
   }
 
-  return [leftAppearances, rightAppearances];
+  return [left, right];
 }
 
-function solveB(
-  leftAppearances: Map<number, number>,
-  rightAppearances: Map<number, number>
-): number {
+function solveB(left: number[], right: Map<number, number>): number {
   let result = 0;
 
-  for (const [number, sumAppearance] of leftAppearances) {
-    const rightAppearance = rightAppearances.get(number) ?? 0;
-    result += sumAppearance * rightAppearance;
+  for (const num of left) {
+    const appearances = right.get(num) ?? 0;
+    result += num * appearances;
   }
 
   return result;
