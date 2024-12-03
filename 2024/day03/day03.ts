@@ -5,92 +5,57 @@ const multiplyRegex = /\d{1,3}\,\d{1,3}/g;
 
 // part 1
 
-function getUncorruptedInstructions(memory: string) {
-  const uncorruptedInstructions: string[] = [];
-  let result: RegExpExecArray | null;
+function getInstructionScore(instruction: string) {
+  const regexMatch = instruction.match(multiplyRegex);
 
-  while ((result = instructionRegex.exec(memory)) !== null) {
-    const instruction = result[0];
-    uncorruptedInstructions.push(instruction);
+  if (!regexMatch) {
+    return 0;
   }
 
-  return uncorruptedInstructions;
+  const [left, right] = regexMatch[0].split(",").map(Number);
+  return left * right;
 }
 
-function solve(uncorruptedInstructions: string[]) {
+function solveA(memory: string) {
   let result = 0;
+  let regexExec: RegExpExecArray | null = null;
 
-  for (const instruction of uncorruptedInstructions) {
-    const match = instruction.match(multiplyRegex);
-    if (match) {
-      const [left, right] = match[0].split(",").map(Number);
-      result += left * right;
+  while ((regexExec = instructionRegex.exec(memory)) !== null) {
+    const instruction = regexExec[0];
+    const score = getInstructionScore(instruction);
+    result += score;
+  }
+
+  return result;
+}
+
+const solutionA = solveA(input);
+console.log({ solutionA });
+
+// part 2
+
+const guardsRegex = /do\(\)|don't\(\)|mul\(\d{1,3}\,\d{1,3}\)/g;
+
+function solveB(memory: string) {
+  let result = 0;
+  let regexExec: RegExpExecArray | null;
+  let enabled = true;
+
+  while ((regexExec = guardsRegex.exec(memory)) !== null) {
+    const match = regexExec[0];
+
+    if (match === "do()" && !enabled) {
+      enabled = true;
+    } else if (match === "don't()" && enabled) {
+      enabled = false;
+    } else if (match !== "do()" && match !== "don't()" && enabled) {
+      const score = getInstructionScore(match);
+      result += score;
     }
   }
 
   return result;
 }
 
-const uncorruptedInstructions = getUncorruptedInstructions(input);
-const solutionA = solve(uncorruptedInstructions);
-console.log({ solutionA });
-
-// part 2
-
-const dontRegex = /don\'t\(\)/g;
-const doRegex = /do\(\)/g;
-
-function getAvailableInstructions(memory: string) {
-  let result: RegExpExecArray | null;
-  const dontIndices: number[] = [];
-  let doIndices: number[] = [];
-
-  while ((result = dontRegex.exec(memory)) !== null) {
-    dontIndices.push(dontRegex.lastIndex);
-  }
-
-  while ((result = doRegex.exec(memory)) !== null) {
-    doIndices.push(doRegex.lastIndex);
-  }
-
-  const unavailableIndices: [number, number][] = [];
-  let doMaxGuard = -1;
-
-  for (const removeFrom of dontIndices) {
-    let removeTo: number | null = null;
-
-    if (removeFrom > doMaxGuard) {
-      let j = 0;
-
-      while (removeTo === null && j < doIndices.length) {
-        const doIndex = doIndices[j];
-
-        if (doIndex > removeFrom) {
-          removeTo = doIndex;
-          doMaxGuard = doIndex;
-          unavailableIndices.push([removeFrom, removeTo]);
-          doIndices = doIndices.slice(j + 1);
-        } else {
-          j++;
-        }
-      }
-    }
-  }
-
-  let resultMemory = "";
-  let prevIndex = 0;
-
-  for (const unavailability of unavailableIndices) {
-    const [start, end] = unavailability;
-    resultMemory += memory.substring(prevIndex, start);
-    prevIndex = end;
-  }
-
-  resultMemory += memory.substring(prevIndex);
-  return resultMemory;
-}
-
-const inputB = getAvailableInstructions(input);
-const uncorruptedInstructionsB = getUncorruptedInstructions(inputB);
-const solutionB = solve(uncorruptedInstructionsB);
+const solutionB = solveB(input);
 console.log({ solutionB });
