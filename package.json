@@ -1,0 +1,14 @@
+{
+  "name": "aoc",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "aoc": "bun run aoc.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
