@@ -1,6 +1,6 @@
-import { input } from "./input";
-
 // part 1
+
+import { input } from "./input";
 
 function parseInputA(): [number[], number[]] {
   const leftArray: number[] = [];
@@ -12,10 +12,7 @@ function parseInputA(): [number[], number[]] {
     rightArray.push(Number(second));
   }
 
-  leftArray.sort();
-  rightArray.sort();
-
-  return [leftArray, rightArray];
+  return [leftArray.toSorted(), rightArray.toSorted()];
 }
 
 function solveA(leftArray: number[], rightArray: number[]): number {
