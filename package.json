@@ -3,7 +3,8 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "aoc": "bun run aoc.ts"
+    "aoc": "bun run aoc.ts",
+    "create-day": "bun run create-day.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"
