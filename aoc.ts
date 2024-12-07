@@ -1,19 +1,26 @@
-import { spawn, argv } from "bun";
+import { argv, spawn } from "bun";
+import { parseArgs } from "util";
 
 const today = new Date();
-const currentYear = today.getFullYear().toString();
 const currentDay = today.getDate().toString();
+const currentYear = today.getFullYear().toString();
 
-if (argv[2] !== undefined && !argv[2].startsWith("--day=")) {
-  console.error("Usage: bun run aoc --day=<day> --year=<year>");
-  process.exit(1);
+const { values } = parseArgs({
+  args: argv,
+  options: {
+    day: { type: "string", default: currentDay },
+    year: { type: "string", default: currentYear },
+  },
+  allowPositionals: true,
+});
+
+let { day, year } = values;
+
+if (day !== undefined) {
+  day = day.padStart(2, "0");
 }
 
-const day = (argv[2]?.split("=")[1] ?? currentDay)?.padStart(2, "0");
-const year = argv[3]?.split("=")[1] ?? currentYear;
-
 const dayPath = `day${day}`;
-
 const scriptPath = `${year}/${dayPath}/${dayPath}.ts`;
 
 try {
