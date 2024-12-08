@@ -23,18 +23,25 @@ function concat(left: number, right: number) {
   return Number(`${left}${right}`);
 }
 
-function getAllResults(numbers: number[], allowConcat?: boolean): number[] {
+function getAllResults(
+  testValue: number,
+  numbers: number[],
+  allowConcat?: boolean
+): number[] {
   let previousResults = [numbers[0]];
 
   for (let i = 1; i < numbers.length; i++) {
     const currentResults: number[] = [];
 
     for (const result of previousResults) {
-      currentResults.push(result + numbers[i]);
-      currentResults.push(result * numbers[i]);
+      const sum = result + numbers[i];
+      const product = result * numbers[i];
+      const concatenation = concat(result, numbers[i]);
 
-      if (allowConcat) {
-        currentResults.push(concat(result, numbers[i]));
+      if (sum <= testValue) currentResults.push(sum);
+      if (product <= testValue) currentResults.push(product);
+      if (allowConcat && concatenation <= testValue) {
+        currentResults.push(concatenation);
       }
     }
 
@@ -46,7 +53,7 @@ function getAllResults(numbers: number[], allowConcat?: boolean): number[] {
 
 function checkEquationFeasible(equation: Equation, allowConcat?: boolean) {
   const { testValue, numbers } = equation;
-  const allResults = getAllResults(numbers, allowConcat);
+  const allResults = getAllResults(testValue, numbers, allowConcat);
 
   return allResults.includes(testValue);
 }
