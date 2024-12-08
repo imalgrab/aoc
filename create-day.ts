@@ -2,8 +2,6 @@ import { argv, write, file } from "bun";
 import { parseArgs } from "util";
 import { mkdir } from "node:fs/promises";
 
-const INPUT_FILE_CONTENT = "export const input = ``;";
-
 const today = new Date();
 const currentDay = today.getDate().toString();
 const currentYear = today.getFullYear().toString();
@@ -32,7 +30,7 @@ try {
   }
 
   const dayPath = `${directoryName}/${formattedDay}.ts`;
-  const inputPath = `${directoryName}/input.ts`;
+  const inputPath = `${directoryName}/input.txt`;
 
   const dayExists = await file(dayPath).exists();
   const inputExists = await file(inputPath).exists();
@@ -47,7 +45,7 @@ try {
   if (inputExists) {
     console.log(`Input file for ${formattedDay} already exists!`);
   } else {
-    await write(inputPath, INPUT_FILE_CONTENT);
+    await write(inputPath, "");
     console.log(`Created input file for ${formattedDay}`);
   }
 } catch (error) {
